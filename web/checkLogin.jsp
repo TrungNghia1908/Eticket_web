@@ -41,19 +41,43 @@
             </tr>
             
             <tr>
-            <td><%=request.getAttribute("message")%></td>
+            <td>${message}<td>
             </tr>
             
             <tr>
-            <form action="<c:url value='/user/logout'/>" method="post">
-                <td><input type="submit" value="logout"></td>
+            <td>
+            <form action="<c:url value='/user/register'/>" method="post">
+            <input type="submit" value="register">
             </form>
+            </td>
                 
-            <form action="<c:url value='/user/removeAccount'/>" method="post">
-               <input type="hidden" name="userEmail" 
-                   value="<c:out value='${user.email}'/>">
-               <td><input type="submit" value="removeAccount"></td>
-           </form>   
+            <td>
+                <form action="<c:url value='/user/logout'/>" method="post">
+                <input type="submit" value="logout">
+                </form>
+            </td>
+            
+            <td>
+                <form action="<c:url value='/user/login'/>" method="post">
+                <input type="submit" value="login">
+                </form>
+            </td>
+            
+            <td>
+                <form action="<c:url value='/user/removeAccount'/>" method="post">
+                <input type="hidden" name="userEmail" 
+                    value="<c:out value='${user.email}'/>">
+                <input type="submit" value="removeAccount">
+                </form>
+            </td>
+            
+            <td>
+                <form action="<c:url value='/user/showProfile'/>"  method="post">
+                <input type="hidden" name="userEmail"
+                       value="<c:out value='${user.email}'/>">
+                <input type="submit" value="Show Profile">       
+                </form>  
+            </td>
             </tr>
             
         </table>

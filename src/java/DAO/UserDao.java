@@ -54,7 +54,7 @@ public class UserDao {
                 u.setEmail(rs.getString("Cus_email"));
                 u.setFullName(rs.getString("Cus_name"));
                 u.setPoneNumber(rs.getString("Cus_phone"));
-                u.setUserName(rs.getString(("user_name")));
+                u.setUserName(rs.getString("user_name"));
                 u.setPassword(rs.getString("Cus_pass"));
                 return u;
             } else {
@@ -136,6 +136,32 @@ public class UserDao {
             return false;
         } finally {
             DBUtil.closeStatement(ps);
+            pool.freeConnection(connection);
+        }
+    }
+    
+    public static boolean updateInfo(User user) {
+        
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        
+        String query = "UPDATE customer "
+                + "SET user_name = ?, Cus_name= ?, Cus_phone =?"
+                + "WHERE  Cus_email = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, user.getUserName());
+            ps.setString(2, user.getFullName());
+            ps.setString(3, user.getPhoneNumber());
+            ps.setString(4, user.getEmail());
+            
+            return ps.executeUpdate() != 0;
+        } catch (SQLException e) {
+            System.err.println(e);
+            return false;
+        } finally {
+            DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
     }

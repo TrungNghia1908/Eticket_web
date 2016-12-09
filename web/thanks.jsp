@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -23,5 +24,6 @@
         <span>${user.userName}</span><br>
         <label class="no_pad_top">Phone Number</label>
         <span>${user.phoneNumber}</span><br>
+        
     </body>
 </html>
