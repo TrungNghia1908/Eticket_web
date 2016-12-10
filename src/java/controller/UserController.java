@@ -1,18 +1,19 @@
 package controller;
 
+import DAO.FeedbackDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import DAO.TripDao;
-import bean.User;
-import DAO.UserDao;
-import bean.Trip;
-import bean.TripList;
-import java.util.List;
 import javax.servlet.http.HttpSession;
+
+import DAO.TripDAO;
+import DAO.UserDAO;
+import bean.Feedback;
+import bean.TripList;
+import bean.User;
+
 
 public class UserController extends HttpServlet {
     
@@ -32,7 +33,7 @@ public class UserController extends HttpServlet {
                             throws ServletException, IOException {
         
         String requestURI = request.getRequestURI();
-        String url = "";
+        String url = "/login.jsp";
         if (requestURI.endsWith("/register")) {
             url = register(request, response);
         } else if (requestURI.endsWith("/login")) {
@@ -65,7 +66,8 @@ public class UserController extends HttpServlet {
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         String conPassword = request.getParameter("conpassword");
-        String phoneNumber = request.getParameter("phonenumber");
+        String phoneParse = request.getParameter("phonenumber");
+        int phoneNumber = Integer.parseInt(phoneParse);
 
         // Store in the bean
         User user = new User();
@@ -81,31 +83,31 @@ public class UserController extends HttpServlet {
         String url;
         String message = "";
         
-        // Check exception condition
-        if (user.getEmail() == null || user.getFullName() == null ||
-            user.getPassword() == null || user.getPhoneNumber() == null ||
-            user.getUserName() == null || user.getEmail().equals("") ||
-            user.getFullName().equals("") || user.getPassword().equals("") ||
-            user.getPhoneNumber().equals("") || user.getUserName().equals("")) {
-            
-            message = "You should fill out all the bland";
-            url = "/register.jsp";
-        }
-        else if (!user.getPassword().equals(conPassword)) {
+//        // Check exception condition
+//        if (user.getEmail() == null || user.getFullName() == null ||
+//            user.getPassword() == null || phoneParse == null ||
+//            user.getUserName() == null || user.getEmail().equals("") ||
+//            user.getFullName().equals("") || user.getPassword().equals("") ||
+//            phoneParse.equals("") || user.getUserName().equals("")) {
+//            
+//            message = "You should fill out all the bland";
+//            url = "/register.jsp";
+//        }
+        if (!user.getPassword().equals(conPassword)) {
             message = "The password not match";
             url = "/register.jsp";
         }
-        else if (UserDao.emailExist(email)) {
+        else if (UserDAO.emailExist(email)) {
             message = "This email address already exists.<br>"
                     + "Please enter another email address.";
             url = "/register.jsp";
         }
-        else if(UserDao.userNameExist(userName)) {
+        else if(UserDAO.userNameExist(userName)) {
             message = "This user name already exists.<br>"
                     + "Please enter another user name.";
             url = "/register.jsp";
         } else {
-            UserDao.insert(user);
+            UserDAO.insert(user);
             url = "/login.jsp";
         }
         request.setAttribute("message", message);
@@ -118,9 +120,9 @@ public class UserController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
-        String url = "";
+        String url;
         
-        User user = UserDao.selectUser(email, password);
+        User user = UserDAO.select(email, password);
         if (user == null) {
             String message = "email or password incorrect";
             request.setAttribute("message", message);
@@ -149,7 +151,7 @@ public class UserController extends HttpServlet {
                                 HttpServletResponse response) {
         String email = request.getParameter("userEmail");
         
-        if (!UserDao.removeUser(email)) {
+        if (!UserDAO.removeUser(email)) {
             String message = "something wrong";
             request.setAttribute("message", message);
         } else {
@@ -157,7 +159,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("message", message);
         }
         
-        return "/checkLogin.jsp";
+        return "/adim/showCustomer.jsp";
     }
 
     private String showProfile(HttpServletRequest request,
@@ -170,7 +172,6 @@ public class UserController extends HttpServlet {
             request.setAttribute("message", message);
             url = "/login.jsp";
         } else {
-            request.getSession().setAttribute("user", user);
             url = "/editProfile.jsp";
         }
         return url;
@@ -184,12 +185,13 @@ public class UserController extends HttpServlet {
         String fullName = request.getParameter("fullname");
 //        String email = request.getParameter("email");
         String userName = request.getParameter("username");
-        String phoneNumber = request.getParameter("phonenumber");
+        String phoneParse = request.getParameter("phonenumber");
+        int phoneNumber = Integer.parseInt(phoneParse);
         
         HttpSession session = request.getSession();
         User oldUser = (User) session.getAttribute("user");
         
-        if (UserDao.userNameExist(userName) 
+        if (UserDAO.userNameExist(userName) 
             && !userName.equals(oldUser.getUserName())) {
             message= "The user name all ready exit";
             request.setAttribute("message", message);
@@ -202,12 +204,12 @@ public class UserController extends HttpServlet {
         user.setUserName(userName);
         user.setPoneNumber(phoneNumber);
         
-        if (!UserDao.updateInfo(user)) {
+        if (!UserDAO.updateInfo(user)) {
             message = "DataBase update false";
             request.setAttribute("message", message);
         } else {
             User newUser =
-                UserDao.selectUser(oldUser.getEmail(), oldUser.getPassword());
+                UserDAO.select(oldUser.getEmail(), oldUser.getPassword());
             session.setAttribute("user", newUser);
             message = "Update successfull";
             request.setAttribute("message", message);
@@ -225,7 +227,7 @@ public class UserController extends HttpServlet {
         if(search == null || search.equals("")) {
             url = "/search.jsp";
         } else {
-            TripList tripList = TripDao.select(search);
+            TripList tripList = TripDAO.select(search);
             if (tripList.isEmpty()) {
                 String message = "There are not exit these trips";
                 request.setAttribute("message", message);
@@ -244,9 +246,30 @@ public class UserController extends HttpServlet {
                                 HttpServletResponse response) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        
         String url;
-        request.getSession().setAttribute("user", user);
-        url = "/feedback/feedback.jsp";
+        String message;
+        
+        if (user == null) {
+            message = "To write feedback please login first";
+            url = "/login.jsp";
+        } else {
+            
+            Feedback feedback = new Feedback();
+            feedback.setComment(request.getParameter("comment"));
+            feedback.setSubject(request.getParameter("subject"));
+            feedback.setUser(user);
+            
+            if (FeedbackDAO.insert(feedback) == 0) {
+                message = "Data faid insert feedback!";
+                url = "/feedback/feedback.jsp";
+            } else {
+                message = "Thank for your contribute";
+                url = "/feedback/feedback.jsp";
+            }
+        }
+        request.setAttribute("message", message);
+        
         return url;
     }
 }

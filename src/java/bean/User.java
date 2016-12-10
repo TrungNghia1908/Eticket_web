@@ -1,14 +1,25 @@
 package bean;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
     
+    private int userId;
     private String fullName;
     private String email;
     private String userName;
     private String password;
-    private String phoneNumber;
+    private int phoneNumber;
     
     public User() {}
+    
+    public int getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(int id) {
+        this.userId = id;
+    }
     
     public String getUserName() {
         return userName;
@@ -42,11 +53,11 @@ public class User {
         this.password = password;
     }
     
-    public String getPhoneNumber() {
+    public int getPhoneNumber() {
         return this.phoneNumber;
     }
     
-    public void setPoneNumber(String phoneNumber) {
+    public void setPoneNumber(int phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }

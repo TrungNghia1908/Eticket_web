@@ -1,13 +1,16 @@
 package controller;
 
-import DAO.TripDao;
+import DAO.FeedbackDAO;
+import DAO.TripDAO;
+import DAO.UserDAO;
+import bean.FeedbackList;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import bean.Trip;
 import bean.TripList;
+import bean.UserList;
 
 /**
  * @author A Di Đà Phật
@@ -29,8 +32,11 @@ public class AdminController extends HttpServlet {
                             HttpServletResponse response)
                             throws ServletException, IOException {
         
+        //get url form request
         String requestURL = request.getRequestURI();
-        String url = "";
+        String url = "/login.jsp"; // default url
+        
+        //scan the url, forward request to true case
         if (requestURL.endsWith("/addTrip")) {
             url = addTrip(request, response);
         } else if (requestURL.endsWith("/showTrip")) {
@@ -39,8 +45,13 @@ public class AdminController extends HttpServlet {
             url = editTrip(request, response);
         } else if (requestURL.endsWith("/removeTrip")) {
             url = removeTrip(request, response);
+        } else if (requestURL.endsWith("/showFeedback")) {
+            url = showFeedback(request, response);
+        } else if (requestURL.endsWith("/showCustomer")) {
+            url = showCustomer(request, response);
         }
         
+        // forward the request, response
         getServletContext().
                 getRequestDispatcher(url).
                 forward(request, response);
@@ -54,7 +65,7 @@ public class AdminController extends HttpServlet {
         String price = request.getParameter("price");
 
         String url;
-        String message = "";
+        String message;
         
         if (arrival == null || arrival.equals("") ||
             destination == null || destination.equals("") 
@@ -68,7 +79,7 @@ public class AdminController extends HttpServlet {
             trip.setDestination(destination);
             trip.setPrice(Integer.parseInt(price));
             
-            TripDao.insert(trip);
+            TripDAO.insert(trip);
             message = "add trip success";
             url = "/adim/addTrip.jsp";
         }
@@ -79,7 +90,7 @@ public class AdminController extends HttpServlet {
     private String showTrip(HttpServletRequest request,
             HttpServletResponse response) {
         int tripId = Integer.parseInt(request.getParameter("tripId"));
-        Trip trip = TripDao.select(tripId);
+        Trip trip = TripDAO.select(tripId);
         request.setAttribute("trip", trip);
        
         return "/adim/editTrip.jsp";
@@ -90,11 +101,10 @@ public class AdminController extends HttpServlet {
         
         int price = Integer.parseInt(request.getParameter("price"));
         int tripId = Integer.parseInt(request.getParameter("tripId"));
-//        String 
         
         String url;
         
-        if(TripDao.updateTrip(tripId, price) != 0) {
+        if(TripDAO.updateTrip(tripId, price) != 0) {
             request.setAttribute("message", "data fail update");
             url = "/adim/editTrip.jsp";
         } else {
@@ -110,11 +120,46 @@ public class AdminController extends HttpServlet {
         int tripId = Integer.parseInt(request.getParameter("tripId"));
         String searchKey = request.getParameter("searchKey");
         
-        
-        TripDao.removeTrip(tripId);
-        TripList tripList = TripDao.select(searchKey);
+        TripDAO.removeTrip(tripId);
+        TripList tripList = TripDAO.select(searchKey);
         request.getSession().setAttribute("tripList", tripList);
         
         return "/search.jsp";
+    }
+    
+    private String showFeedback(HttpServletRequest request,
+                                HttpServletResponse response) {
+        
+        FeedbackList feedbackList = new FeedbackList();
+        feedbackList.setFeedbacks(FeedbackDAO.select());
+    
+        String url;
+        String message;
+        
+        request.setAttribute("feedbackList", feedbackList);
+        message = "feedback list";
+        
+        url = "/adim/showFeedback.jsp";
+        request.setAttribute("message", message);
+        
+        return url;
+    }
+    
+    private String showCustomer (HttpServletRequest request,
+                                 HttpServletResponse response) {
+        UserList userList = new UserList();
+        userList.setUsers(UserDAO.select());
+       
+        
+        String message;
+        String url;
+        
+        request.setAttribute("userList", userList);
+        message = "List of Customer:";
+        
+        url = "/adim/showCustomer.jsp";
+        request.setAttribute("message", message);
+        
+        return url;
     }
 }

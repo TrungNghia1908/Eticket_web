@@ -12,32 +12,32 @@
         <table align="center">
             <tr>
             <td>Full Name</td>
-            <td><input type="text" name="fullname" /></td>
+            <td><input type="text" name="fullname" required="" /></td>
             </tr>
             
             <tr>
             <td>Email</td>
-            <td><input type="email" name="email" /></td>
+            <td><input type="email" name="email" required="" /></td>
             </tr>
             
             <tr>
             <td>Username</td>
-            <td><input type="text" name="username" /></td>
+            <td><input type="text" name="username" required="" /></td>
             </tr>
             
             <tr>
             <td>Password</td>
-            <td><input type="password" name="password" /></td>
+            <td><input type="password" name="password" required="" /></td>
             </tr>
         
             <tr>
             <td>Confirm Password</td>
-            <td><input type="password" name="conpassword" /></td>
+            <td><input type="password" name="conpassword" required="" /></td>
             </tr>
             
             <tr>
             <td>Phone Number</td>
-            <td><input type="text" name="phonenumber" /></td>
+            <td><input type="text" name="phonenumber" required="" /></td>
             </tr>
         
             <tr>

@@ -1,7 +1,7 @@
 <%-- 
     Document   : checkLogin
     Created on : Dec 4, 2016, 3:54:09 PM
-    Author     : A Di Da Phat
+    Author     : A Di Đà Phật
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -46,14 +46,14 @@
             
             <tr>
             <td>
-            <form action="<c:url value='/user/register'/>" method="post">
+            <form action="<c:url value='/register.jsp'/>" method="post">
             <input type="submit" value="register">
             </form>
             </td>
                 
             <td>
                 <form action="<c:url value='/user/logout'/>" method="post">
-                <input type="submit" value="logout">
+                    <input type="submit" value="logout">
                 </form>
             </td>
             
@@ -64,18 +64,22 @@
             </td>
             
             <td>
-                <form action="<c:url value='/user/removeAccount'/>" method="post">
-                <input type="hidden" name="userEmail" 
-                    value="<c:out value='${user.email}'/>">
-                <input type="submit" value="removeAccount">
-                </form>
-            </td>
-            
-            <td>
                 <form action="<c:url value='/user/showProfile'/>"  method="post">
                 <input type="hidden" name="userEmail"
                        value="<c:out value='${user.email}'/>">
                 <input type="submit" value="Show Profile">       
+                </form>  
+            </td>
+            
+            <td>
+                <form action="<c:url value='/admin/showFeedback'/>"  method="post">
+                <input type="submit" value="Show Feedbacks">       
+                </form>  
+            </td>
+            
+             <td>
+                <form action="<c:url value='/admin/showCustomer'/>"  method="post">
+                <input type="submit" value="Show Customers">       
                 </form>  
             </td>
             </tr>

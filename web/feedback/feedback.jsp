@@ -13,17 +13,20 @@
         <title>Feed Back</title>
     </head>
     <body>
-    <h1>Hello World!</h1>
+        
     <form action= "<c:url value='/user/sendFeedback'/>" method="post">
         <table align="center">
+            
+            <tr><th><h1>Feedback From</h1></th></tr>
+            
             <tr>
             <td>Name</td>
-            <td><input type="text" name="fullname" value="${user.fullName}" /></td>
+            <td><h3>${user.fullName}</h3></td>
             </tr>
             
             <tr>
             <td>Email</td>
-            <td><input type="email" name="email"  value="${user.email}"/></td>
+            <td><h3>${user.email}</h3></td>
             </tr>
             
             <tr>
@@ -42,7 +45,7 @@
 
             <tr>
             <td></td>
-            <td><input type="submit" value="Register"></input><input type="reset" value="Reset"></input></td>
+            <td><input type="submit" value="Submit"></input><input type="reset" value="Reset"></input></td>
             </tr>
         </table>
     </form>
