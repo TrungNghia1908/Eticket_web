@@ -2,10 +2,26 @@ package DAO;
 
 import bean.User;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author A Di Đà Phật.
+ * 
+ * In the any DAO class in this project we follow these step:
+ * 1. Get connection.
+ *  1.1. Using ConnectionPool class to get a connection Object (getInstance());
+ *  1.2. Get connection.
+ * 2. Create query
+ * 3. Prepared query (replace ?)
+ * 4. execute query (using executeQuery using for UPDATE, INSERT, DELETE)
+ * 5. Store the result to bean or send signal success execute.
+ * 6. Close preparedStatement, Result and Connection.
+ */
 
 public class UserDao {
     
-    public static void insert (User user) {
+    public static String insert (User user) {
         
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -13,7 +29,7 @@ public class UserDao {
         ResultSet rs = null;
         
         String query = "INSERT INTO customer "
-                    + "(user_name, Cus_email, Cus_name, Cus_pass, Cus_phone) "
+                    + "(User_name, Cus_email, Cus_name, Cus_pass, Cus_phone) "
                     + "VALUES (?, ?, ?, ?, ?)";
         
         try {
@@ -22,11 +38,13 @@ public class UserDao {
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getFullName());
             ps.setString(4, user.getPassword());
-            ps.setString(5, user.getPhoneNumber());
+            ps.setInt(5, user.getPhoneNumber());
             
             ps.executeUpdate();
+            return ps.toString();
         } catch (SQLException e) {
            System.err.println(e);
+           return e.getMessage();
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closePreparedStatement(ps);
@@ -34,7 +52,8 @@ public class UserDao {
         }
     }
     
-    public static User selectUser (String email, String password) {
+    public static User select (String email, String password) {
+        
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -51,10 +70,11 @@ public class UserDao {
             rs = ps.executeQuery();
             if (rs.next()) {
                 User u = new User();
+                u.setUserId(rs.getInt("Cus_id"));
                 u.setEmail(rs.getString("Cus_email"));
                 u.setFullName(rs.getString("Cus_name"));
-                u.setPoneNumber(rs.getString("Cus_phone"));
-                u.setUserName(rs.getString("user_name"));
+                u.setPoneNumber(rs.getInt("Cus_phone"));
+                u.setUserName(rs.getString("User_name"));
                 u.setPassword(rs.getString("Cus_pass"));
                 return u;
             } else {
@@ -69,6 +89,51 @@ public class UserDao {
             pool.freeConnection(connection);
         }
     }
+    
+    public static User select (int userId) {
+        
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        String query = "SELECT * "
+                + "FROM customer "
+                + "WHERE Cus_id= ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+            // Because of selecting by id,
+            //we get only one row (1 customer) or null
+            if (rs.next()) {
+                User u = new User();
+                u.setUserId(rs.getInt("Cus_id"));
+                u.setEmail(rs.getString("Cus_email"));
+                u.setFullName(rs.getString("Cus_name"));
+                u.setPoneNumber(rs.getInt("Cus_phone"));
+                u.setUserName(rs.getString("User_name"));
+                u.setPassword(rs.getString("Cus_pass"));
+                return u;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
+            return null;
+        } finally {
+            DBUtil.closePreparedStatement(ps);
+            DBUtil.closeResultSet(rs);
+            pool.freeConnection(connection);
+        }
+    }
+    
+    /**
+     * select email from customer. 
+     * if result = 0 (email not exist in database)
+     *  return false
+     * else return true
+     */
     
     public static boolean emailExist(String email) {
         ConnectionPool pool = ConnectionPool.getInstance();
@@ -94,15 +159,17 @@ public class UserDao {
         }
     }
     
+    // Same idea with emailExit
     public static boolean userNameExist(String userName) {
+        
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         
-        String query = "SELECT user_name "
+        String query = "SELECT User_name "
                     + "FROM customer "
-                    + "WHERE user_name= ?";
+                    + "WHERE User_name= ?";
         try {
             ps = connection.prepareStatement(query);
             ps.setString(1, userName);
@@ -118,7 +185,9 @@ public class UserDao {
         }
     }
     
+    // Using email to delete customer in customer table
     public static boolean removeUser(String email) {
+        
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -147,20 +216,57 @@ public class UserDao {
         PreparedStatement ps = null;
         
         String query = "UPDATE customer "
-                + "SET user_name = ?, Cus_name= ?, Cus_phone =?"
+                + "SET User_name = ?, Cus_name= ?, Cus_phone =? "
                 + "WHERE  Cus_email = ?";
         try {
             ps = connection.prepareStatement(query);
             ps.setString(1, user.getUserName());
             ps.setString(2, user.getFullName());
-            ps.setString(3, user.getPhoneNumber());
+            ps.setInt(3, user.getPhoneNumber());
             ps.setString(4, user.getEmail());
             
-            return ps.executeUpdate() != 0;
+            return  ps.executeUpdate() != 0;
+//                    
         } catch (SQLException e) {
             System.err.println(e);
             return false;
         } finally {
+            DBUtil.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+    }
+    
+    public static List<User> select () {
+        
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        String query = "SELECT * FROM customer";
+        
+        try {
+            ps = connection.prepareStatement(query);
+            rs = ps.executeQuery();
+            
+            List<User> users = new ArrayList<>();
+            while(rs.next()) {
+                User u = new User();
+                u.setUserId(rs.getInt("Cus_id"));
+                u.setUserName(rs.getString("User_name"));
+                u.setEmail(rs.getString("cus_email"));
+                u.setFullName(rs.getString("Cus_name"));
+                u.setPassword(rs.getString("Cus_pass"));
+                u.setPoneNumber(rs.getInt("Cus_phone"));
+                
+                users.add(u);
+            }
+            return users;
+        } catch (SQLException e) {
+            System.err.println(e);
+            return null;
+        } finally {
+            DBUtil.closeResultSet(rs);
             DBUtil.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
