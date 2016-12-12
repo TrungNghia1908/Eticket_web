@@ -4,19 +4,17 @@
     Author     : A Di Da Phat
 --%>
 
+<jsp:include page="/includes/headeruser.jsp" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Checking Login</title>
-    </head>
-    <body>
+
+<section>
+    <center>
         <h1>You are login already</h1>
-        <table align="center">
+        <table>
             <tr>
-            <td>Email</td>
+            <td >Email</td>
             <td>${user.email}</td>
             </tr>
             
@@ -75,11 +73,19 @@
                 <form action="<c:url value='/user/showProfile'/>"  method="post">
                 <input type="hidden" name="userEmail"
                        value="<c:out value='${user.email}'/>">
-                <input type="submit" value="Show Profile">       
+                <input type="submit" value="Edit Profile">       
+                </form>  
+            </td>
+            
+            <td>
+                <form action="<c:url value='/admin/showFeedback'/>"  method="post">
+                <input type="submit" value="Show Feedbacks">       
                 </form>  
             </td>
             </tr>
             
         </table>
-    </body>
-</html>
+</center>
+</section>
+<jsp:include page="/includes/footer.jsp" /> 
+

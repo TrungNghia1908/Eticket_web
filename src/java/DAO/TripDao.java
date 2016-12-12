@@ -3,12 +3,24 @@ package DAO;
 import java.sql.*;
 import bean.Trip;
 import bean.TripList;
+import static java.lang.System.console;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author A Di Đà Phật
+ * @author A Di Đà Phật.
+ * 
+ * In the any DAO class in this project we follow these step:
+ * 1. Get connection.
+ *  1.1. Using ConnectionPool class to get a connection Object (getInstance());
+ *  1.2. Get connection.
+ * 2. Create query
+ * 3. Prepared query (replace ?)
+ * 4. execute query (using executeQuery using for UPDATE, INSERT, DELETE)
+ * 5. Store the result to bean or send signal success execute.
+ * 6. Close preparedStatement, Result and Connection.
  */
+
 public class TripDao {
     
     public static void insert (Trip trip) {
@@ -50,13 +62,19 @@ public class TripDao {
             ps.setString(1, tripName);
             ps.setString(2, tripName);
             rs = ps.executeQuery();
+            
+            // Because the result (rs) is the list of trip 
+            // so creating a list to store result.
             TripList trips = new TripList();
             while (rs.next()) {
+                // Create trip to store each row of the result.
                 Trip t = new Trip();
                 t.setTripId(rs.getInt("TripID"));
                 t.setArrival(rs.getString("Arrival"));
                 t.setDestination(rs.getString("Destination"));
                 t.setPrice(rs.getInt("Price"));
+                
+                // add the trip to the trip List.
                 trips.add(t);
             }
             return trips;

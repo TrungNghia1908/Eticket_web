@@ -1,18 +1,19 @@
 package controller;
 
+import DAO.FeedbackDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import DAO.TripDao;
-import bean.User;
 import DAO.UserDao;
-import bean.Trip;
+import bean.Feedback;
 import bean.TripList;
-import java.util.List;
-import javax.servlet.http.HttpSession;
+import bean.User;
+
 
 public class UserController extends HttpServlet {
     
@@ -32,7 +33,7 @@ public class UserController extends HttpServlet {
                             throws ServletException, IOException {
         
         String requestURI = request.getRequestURI();
-        String url = "";
+        String url = "/login.jsp";
         if (requestURI.endsWith("/register")) {
             url = register(request, response);
         } else if (requestURI.endsWith("/login")) {
@@ -88,7 +89,7 @@ public class UserController extends HttpServlet {
             user.getFullName().equals("") || user.getPassword().equals("") ||
             user.getPhoneNumber().equals("") || user.getUserName().equals("")) {
             
-            message = "You should fill out all the bland";
+            message = "You should fill out all the blank";
             url = "/register.jsp";
         }
         else if (!user.getPassword().equals(conPassword)) {
@@ -118,9 +119,9 @@ public class UserController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
-        String url = "";
+        String url;
         
-        User user = UserDao.selectUser(email, password);
+        User user = UserDao.select(email, password);
         if (user == null) {
             String message = "email or password incorrect";
             request.setAttribute("message", message);
@@ -170,8 +171,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("message", message);
             url = "/login.jsp";
         } else {
-            request.getSession().setAttribute("user", user);
-            url = "/editProfile.jsp";
+            url = "/userpage/editProfile.jsp";
         }
         return url;
     }
@@ -193,7 +193,7 @@ public class UserController extends HttpServlet {
             && !userName.equals(oldUser.getUserName())) {
             message= "The user name all ready exit";
             request.setAttribute("message", message);
-            return  "/editProfile.jsp";
+            return  "/userpage/editProfile.jsp";
         }
                 
         User user = new User();
@@ -207,7 +207,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("message", message);
         } else {
             User newUser =
-                UserDao.selectUser(oldUser.getEmail(), oldUser.getPassword());
+                UserDao.select(oldUser.getEmail(), oldUser.getPassword());
             session.setAttribute("user", newUser);
             message = "Update successfull";
             request.setAttribute("message", message);
@@ -244,9 +244,29 @@ public class UserController extends HttpServlet {
                                 HttpServletResponse response) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        
         String url;
-        request.getSession().setAttribute("user", user);
-        url = "/feedback/feedback.jsp";
+        String message;
+        
+        if (user == null) {
+            message = "To write feedback please login first";
+            url = "/login.jsp";
+        } else {
+            Feedback feedback = new Feedback();
+            feedback.setComment(request.getParameter("comment"));
+            feedback.setSubject(request.getParameter("subject"));
+            feedback.setUser(user);
+            
+            if (FeedbackDAO.insert(feedback) == 0) {
+                message = "Data faid insert feedback!";
+                url = "/userpage/feedback.jsp";
+            } else {
+                message = "Thank for your contribute";
+                url = "/userpage/feedback.jsp";
+            }
+        }
+        request.setAttribute("message", message);
+        
         return url;
     }
 }

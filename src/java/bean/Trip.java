@@ -1,9 +1,11 @@
 package bean;
 
+import java.io.Serializable;
+
 /**
  * @author A Di Đà Phật
  */
-public class Trip {
+public class Trip implements Serializable {
     
     private int tripId;
     private String arrival;

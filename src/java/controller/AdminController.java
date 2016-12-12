@@ -1,13 +1,15 @@
 package controller;
 
+import DAO.FeedbackDAO;
 import DAO.TripDao;
+import bean.FeedbackList;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import bean.Trip;
 import bean.TripList;
+import java.util.List;
 
 /**
  * @author A Di Đà Phật
@@ -39,6 +41,8 @@ public class AdminController extends HttpServlet {
             url = editTrip(request, response);
         } else if (requestURL.endsWith("/removeTrip")) {
             url = removeTrip(request, response);
+        } else if (requestURL.endsWith("/showFeedback")) {
+            url = showFeedback(request, response);
         }
         
         getServletContext().
@@ -54,14 +58,14 @@ public class AdminController extends HttpServlet {
         String price = request.getParameter("price");
 
         String url;
-        String message = "";
+        String message;
         
         if (arrival == null || arrival.equals("") ||
             destination == null || destination.equals("") 
                 || price == null || price.equals("")
                 ) {
-            message = "you should fill out all the bland";
-            url = "/adim/addTrip.jsp";
+            message = "you should fill out all the blank";
+            url = "/adminpage/addTrip.jsp";
         } else {
             Trip trip = new Trip();
             trip.setArrival(arrival);
@@ -70,7 +74,7 @@ public class AdminController extends HttpServlet {
             
             TripDao.insert(trip);
             message = "add trip success";
-            url = "/adim/addTrip.jsp";
+            url = "/adminpage/addTrip.jsp";
         }
         request.setAttribute("message", message);
         return url;
@@ -82,7 +86,7 @@ public class AdminController extends HttpServlet {
         Trip trip = TripDao.select(tripId);
         request.setAttribute("trip", trip);
        
-        return "/adim/editTrip.jsp";
+        return "/adminpage/editTrip.jsp";
     }
     
     private String editTrip(HttpServletRequest request,
@@ -90,13 +94,12 @@ public class AdminController extends HttpServlet {
         
         int price = Integer.parseInt(request.getParameter("price"));
         int tripId = Integer.parseInt(request.getParameter("tripId"));
-//        String 
         
         String url;
         
         if(TripDao.updateTrip(tripId, price) != 0) {
             request.setAttribute("message", "data fail update");
-            url = "/adim/editTrip.jsp";
+            url = "/adminpage/editTrip.jsp";
         } else {
             url = "/search.jsp";
         }
@@ -110,11 +113,27 @@ public class AdminController extends HttpServlet {
         int tripId = Integer.parseInt(request.getParameter("tripId"));
         String searchKey = request.getParameter("searchKey");
         
-        
         TripDao.removeTrip(tripId);
         TripList tripList = TripDao.select(searchKey);
         request.getSession().setAttribute("tripList", tripList);
         
         return "/search.jsp";
+    }
+    
+    private String showFeedback(HttpServletRequest request,
+                                HttpServletResponse response) {
+        
+        FeedbackList feedbackList = new FeedbackList();
+        feedbackList.setFeedbacks(FeedbackDAO.select());
+    
+        String url;
+        String message;
+        
+        request.setAttribute("feedbackList", feedbackList);
+        message = "feedback list";
+        
+        url = "/adminpage/showFeedback.jsp";
+        request.setAttribute("message", message);
+        return url;
     }
 }
