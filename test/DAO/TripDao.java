@@ -1,5 +1,6 @@
 package DAO;
 
+import DAO.*;
 import java.sql.*;
 import bean.Trip;
 import bean.TripList;
@@ -18,12 +19,12 @@ import bean.TripList;
  * 6. Close preparedStatement, Result and Connection.
  */
 
-public class TripDAO {
+public class TripDao {
     
-    public static void insert (Trip trip) {
+    public static void insert (Trip trip) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -40,13 +41,12 @@ public class TripDAO {
         } finally {
             DBUtil.closePreparedStatement(ps);
             DBUtil.closeResultSet(rs);
-            pool.freeConnection(connection);
         }               
     }
     
-    public static TripList select(String tripName) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+    public static TripList select(String tripName) throws ClassNotFoundException {
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -81,13 +81,12 @@ public class TripDAO {
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
-    public static Trip select(int tripId) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+    public static Trip select(int tripId) throws ClassNotFoundException {
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -112,14 +111,13 @@ public class TripDAO {
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
-    public static int updateTrip(int tripId,  int price) {
+    public static int updateTrip(int tripId,  int price) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         
         String query =  "UPDATE trip "
@@ -135,14 +133,13 @@ public class TripDAO {
             return 0;
         } finally {
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }       
     }
     
-    public static int removeTrip(int tripId) {
+    public static int removeTrip(int tripId) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         
         String query = "DELETE FROM trip "
@@ -156,7 +153,10 @@ public class TripDAO {
             return 0;
         } finally {
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
+    }
+    
+    public static void main(String[] agrs) {
+        
     }
 }

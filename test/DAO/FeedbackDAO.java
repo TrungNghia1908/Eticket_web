@@ -1,5 +1,6 @@
 package DAO;
 
+import DAO.*;
 import bean.Feedback;
 import bean.User;
 import java.sql.*;
@@ -23,10 +24,10 @@ import java.util.List;
 public class FeedbackDAO {
     
     
-    public static int insert (Feedback feedback) {
+    public static int insert (Feedback feedback) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         
         String query = 
@@ -43,14 +44,13 @@ public class FeedbackDAO {
             return 0;
         } finally {
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
-    public static List<Feedback> select() {
+    public static List<Feedback> select() throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -77,7 +77,7 @@ public class FeedbackDAO {
                  * and store that result in new User object.
                  * 2. Set that new user object in the feedback object.
                  */ 
-                User u = UserDao.select(rs.getInt("Cus_id"));
+                User u = UserDaoTest.select(rs.getInt("Cus_id"));
                 f.setUser(u);
                 
                 // add the feedback to the feedback list.
@@ -91,7 +91,10 @@ public class FeedbackDAO {
         } finally {
             DBUtil.closePreparedStatement(ps);
             DBUtil.closeResultSet(rs);
-            pool.freeConnection(connection);
         }
+    }
+    
+    public static void main (String[] agrs) {
+        
     }
 }

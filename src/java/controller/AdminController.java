@@ -1,8 +1,8 @@
 package controller;
 
 import DAO.FeedbackDAO;
-import DAO.TripDAO;
-import DAO.UserDAO;
+import DAO.TripDao;
+import DAO.UserDao;
 import bean.FeedbackList;
 import java.io.IOException;
 import javax.servlet.*;
@@ -79,7 +79,7 @@ public class AdminController extends HttpServlet {
             trip.setDestination(destination);
             trip.setPrice(Integer.parseInt(price));
             
-            TripDAO.insert(trip);
+            TripDao.insert(trip);
             message = "add trip success";
             url = "/adim/addTrip.jsp";
         }
@@ -90,7 +90,7 @@ public class AdminController extends HttpServlet {
     private String showTrip(HttpServletRequest request,
             HttpServletResponse response) {
         int tripId = Integer.parseInt(request.getParameter("tripId"));
-        Trip trip = TripDAO.select(tripId);
+        Trip trip = TripDao.select(tripId);
         request.setAttribute("trip", trip);
        
         return "/adim/editTrip.jsp";
@@ -104,7 +104,7 @@ public class AdminController extends HttpServlet {
         
         String url;
         
-        if(TripDAO.updateTrip(tripId, price) != 0) {
+        if(TripDao.updateTrip(tripId, price) != 0) {
             request.setAttribute("message", "data fail update");
             url = "/adim/editTrip.jsp";
         } else {
@@ -120,8 +120,8 @@ public class AdminController extends HttpServlet {
         int tripId = Integer.parseInt(request.getParameter("tripId"));
         String searchKey = request.getParameter("searchKey");
         
-        TripDAO.removeTrip(tripId);
-        TripList tripList = TripDAO.select(searchKey);
+        TripDao.removeTrip(tripId);
+        TripList tripList = TripDao.select(searchKey);
         request.getSession().setAttribute("tripList", tripList);
         
         return "/search.jsp";
@@ -148,8 +148,7 @@ public class AdminController extends HttpServlet {
     private String showCustomer (HttpServletRequest request,
                                  HttpServletResponse response) {
         UserList userList = new UserList();
-        userList.setUsers(UserDAO.select());
-       
+        userList.setUsers(UserDao.select());
         
         String message;
         String url;

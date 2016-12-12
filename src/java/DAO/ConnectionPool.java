@@ -7,7 +7,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- *
  * @author A Di Da Phat
  */
 public class ConnectionPool {

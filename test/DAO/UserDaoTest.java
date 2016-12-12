@@ -1,9 +1,13 @@
 package DAO;
 
 import bean.User;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import util.PasswordUtil;
 
 /**
  * @author A Di Đà Phật.
@@ -19,43 +23,45 @@ import java.util.List;
  * 6. Close preparedStatement, Result and Connection.
  */
 
-public class UserDAO {
+public class UserDaoTest {
     
-    public static String insert (User user) {
+    public static String insert (User user) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
         String query = "INSERT INTO customer "
-                    + "(User_name, Cus_email, Cus_name, Cus_pass, Cus_phone) "
-                    + "VALUES (?, ?, ?, ?, ?)";
-        
+                    + "(User_name, Cus_email, Cus_name, "
+                    + "Cus_phone, Cus_pass, Cus_hashPass) "
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
             ps.setString(1, user.getUserName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getFullName());
-            ps.setString(4, user.getPassword());
-            ps.setInt(5, user.getPhoneNumber());
+            ps.setInt(4, user.getPhoneNumber());
+            ps.setString(5, user.getPassword());
+//            ps.setString(7, user.getStaltPass());
+            String hash = user.getHashPass();
+            ps.setString(6, hash);
             
             ps.executeUpdate();
-            return ps.toString();
+            return "success full";
         } catch (SQLException e) {
-           System.err.println(e);
+           Logger.getLogger(UserDaoTest.class.getName()).log(Level.SEVERE, null, e);
            return e.getMessage();
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
-    public static User select (String email, String password) {
+    public static User select (String email, String password) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -86,14 +92,13 @@ public class UserDAO {
         } finally {
             DBUtil.closePreparedStatement(ps);
             DBUtil.closeResultSet(rs);
-            pool.freeConnection(connection);
         }
     }
     
-    public static User select (int userId) {
+    public static User select (int userId) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -124,20 +129,13 @@ public class UserDAO {
         } finally {
             DBUtil.closePreparedStatement(ps);
             DBUtil.closeResultSet(rs);
-            pool.freeConnection(connection);
         }
     }
     
-    /**
-     * select email from customer. 
-     * if result = 0 (email not exist in database)
-     *  return false
-     * else return true
-     */
-    
-    public static boolean emailExist(String email) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+    public static boolean emailExist(String email) throws ClassNotFoundException {
+        
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -155,15 +153,14 @@ public class UserDAO {
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closeStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
     // Same idea with emailExit
-    public static boolean userNameExist(String userName) {
+    public static boolean userNameExist(String userName) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -181,15 +178,14 @@ public class UserDAO {
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
     // Using email to delete customer in customer table
-    public static boolean removeUser(String email) {
+    public static boolean removeUser(String email) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         
         String query = "DELETE FROM customer "
@@ -205,14 +201,13 @@ public class UserDAO {
             return false;
         } finally {
             DBUtil.closeStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
-    public static boolean updateInfo(User user) {
+    public static boolean updateInfo(User user) throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         
         String query = "UPDATE customer "
@@ -232,14 +227,13 @@ public class UserDAO {
             return false;
         } finally {
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
-    public static List<User> select () {
+    public static List<User> select () throws ClassNotFoundException {
         
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
+        DBconnect DBconnect = new DBconnect();
+        Connection connection = DBconnect.con;
         PreparedStatement ps = null;
         ResultSet rs = null;
         
@@ -268,8 +262,33 @@ public class UserDAO {
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
         }
     }
     
+    public static void main(String[] args) {
+        
+            User u = new User();
+            u.setEmail("tuthapduoc@gmail.com");
+            u.setFullName("Pham Trong Yem");
+            u.setPoneNumber(123455);
+            u.setUserName("NghiaLun");
+            u.setPassword("adidaphat");
+            
+        try {
+//            String salt = PasswordUtil.getSalt();
+            String hash =PasswordUtil.hashPassword("adidaphat");
+//            u.setStaltPass(salt);
+            u.setHashPass(hash);
+//            System.out.println("Stalt: " + salt);
+            System.out.println("hashStalt: " + u.getHashPass());
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(UserDaoTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        try {    
+            insert(u);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDaoTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

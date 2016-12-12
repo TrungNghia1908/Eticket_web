@@ -9,6 +9,8 @@ public class User implements Serializable{
     private String email;
     private String userName;
     private String password;
+    private String hashPass;
+    private String staltPass;
     private int phoneNumber;
     
     public User() {}
@@ -45,6 +47,14 @@ public class User implements Serializable{
         this.fullName = fullName;
     }
     
+    public int getPhoneNumber() {
+        return this.phoneNumber;
+    }
+    
+    public void setPoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    
     public String getPassword() {
         return this.password;
     }
@@ -53,11 +63,19 @@ public class User implements Serializable{
         this.password = password;
     }
     
-    public int getPhoneNumber() {
-        return this.phoneNumber;
+    public String getHashPass() {
+        return this.hashPass;
     }
     
-    public void setPoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setHashPass(String hashPass) {
+        this.hashPass = hashPass;
+    }
+    
+    public String getStaltPass() {
+        return this.staltPass;
+    }
+    
+    public void setStaltPass(String hashPass) {
+        this.hashPass = hashPass;
     }
 }

@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import DAO.TripDAO;
-import DAO.UserDAO;
+import DAO.TripDao;
+import DAO.UserDao;
 import bean.Feedback;
 import bean.TripList;
 import bean.User;
@@ -97,17 +97,19 @@ public class UserController extends HttpServlet {
             message = "The password not match";
             url = "/register.jsp";
         }
-        else if (UserDAO.emailExist(email)) {
+        else if (UserDao.emailExist(email)) {
             message = "This email address already exists.<br>"
                     + "Please enter another email address.";
             url = "/register.jsp";
         }
-        else if(UserDAO.userNameExist(userName)) {
+        else if(UserDao.userNameExist(userName)) {
             message = "This user name already exists.<br>"
                     + "Please enter another user name.";
             url = "/register.jsp";
         } else {
-            UserDAO.insert(user);
+            
+            
+            UserDao.insert(user);
             url = "/login.jsp";
         }
         request.setAttribute("message", message);
@@ -122,7 +124,7 @@ public class UserController extends HttpServlet {
         
         String url;
         
-        User user = UserDAO.select(email, password);
+        User user = UserDao.select(email, password);
         if (user == null) {
             String message = "email or password incorrect";
             request.setAttribute("message", message);
@@ -151,7 +153,7 @@ public class UserController extends HttpServlet {
                                 HttpServletResponse response) {
         String email = request.getParameter("userEmail");
         
-        if (!UserDAO.removeUser(email)) {
+        if (!UserDao.removeUser(email)) {
             String message = "something wrong";
             request.setAttribute("message", message);
         } else {
@@ -191,7 +193,7 @@ public class UserController extends HttpServlet {
         HttpSession session = request.getSession();
         User oldUser = (User) session.getAttribute("user");
         
-        if (UserDAO.userNameExist(userName) 
+        if (UserDao.userNameExist(userName) 
             && !userName.equals(oldUser.getUserName())) {
             message= "The user name all ready exit";
             request.setAttribute("message", message);
@@ -204,12 +206,12 @@ public class UserController extends HttpServlet {
         user.setUserName(userName);
         user.setPoneNumber(phoneNumber);
         
-        if (!UserDAO.updateInfo(user)) {
+        if (!UserDao.updateInfo(user)) {
             message = "DataBase update false";
             request.setAttribute("message", message);
         } else {
             User newUser =
-                UserDAO.select(oldUser.getEmail(), oldUser.getPassword());
+                UserDao.select(oldUser.getEmail(), oldUser.getPassword());
             session.setAttribute("user", newUser);
             message = "Update successfull";
             request.setAttribute("message", message);
@@ -227,7 +229,7 @@ public class UserController extends HttpServlet {
         if(search == null || search.equals("")) {
             url = "/search.jsp";
         } else {
-            TripList tripList = TripDAO.select(search);
+            TripList tripList = TripDao.select(search);
             if (tripList.isEmpty()) {
                 String message = "There are not exit these trips";
                 request.setAttribute("message", message);
