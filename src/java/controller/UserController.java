@@ -1,17 +1,21 @@
 package controller;
 
+import DAO.FeedbackDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import bean.User;
-import DAO.UserDao;
 import javax.servlet.http.HttpSession;
 
+import DAO.TripDAO;
+import DAO.UserDAO;
+import bean.Feedback;
+import bean.TripList;
+import bean.User;
+
+
 public class UserController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
     
     @Override
     public void doGet(HttpServletRequest request,
@@ -29,7 +33,7 @@ public class UserController extends HttpServlet {
                             throws ServletException, IOException {
         
         String requestURI = request.getRequestURI();
-        String url = "";
+        String url = "/login.jsp";
         if (requestURI.endsWith("/register")) {
             url = register(request, response);
         } else if (requestURI.endsWith("/login")) {
@@ -38,14 +42,23 @@ public class UserController extends HttpServlet {
             url = logout(request, response);
         } else if (requestURI.endsWith("/removeAccount")) {
             url = removeAccount(request, response);
+        } else if (requestURI.endsWith("/showProfile")) {
+            url = showProfile(request, response);
+        } else if (requestURI.endsWith("/editProfile")) {
+            url = editProfile(request, response);
+        } else if (requestURI.endsWith("/searchTrip")) {
+            url = searchTrip(request, response);
+        } else if (requestURI.endsWith("/sendFeedback")) {
+            url = sendFeedback(request, response);
         }
+        
         getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
     }
 
     private String register(HttpServletRequest request,
-            HttpServletResponse response) {
+                                HttpServletResponse response) {
         
         // get all parameter we need
         String fullName = request.getParameter("fullname");
@@ -76,39 +89,39 @@ public class UserController extends HttpServlet {
             user.getFullName().equals("") || user.getPassword().equals("") ||
             user.getPhoneNumber().equals("") || user.getUserName().equals("")) {
             
-            message = "Your should fill out all the bland";
+            message = "You should fill out all the blank";
             url = "/register.jsp";
         }
         else if (!user.getPassword().equals(conPassword)) {
             message = "The password not match";
             url = "/register.jsp";
         }
-        else if (UserDao.emailExist(email)) {
+        else if (UserDAO.emailExist(email)) {
             message = "This email address already exists.<br>"
                     + "Please enter another email address.";
             url = "/register.jsp";
         }
-        else if(UserDao.userNameExist(userName)) {
+        else if(UserDAO.userNameExist(userName)) {
             message = "This user name already exists.<br>"
                     + "Please enter another user name.";
             url = "/register.jsp";
         } else {
-            UserDao.insert(user);
-            url = "/thanks.jsp";
+            UserDAO.insert(user);
+            url = "/login.jsp";
         }
         request.setAttribute("message", message);
         return url;
     }
 
     private String login(HttpServletRequest request,
-                            HttpServletResponse response) {
+                                HttpServletResponse response) {
         
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
-        String url = "";
+        String url;
         
-        User user = UserDao.selectUser(email, password);
+        User user = UserDAO.select(email, password);
         if (user == null) {
             String message = "email or password incorrect";
             request.setAttribute("message", message);
@@ -123,7 +136,7 @@ public class UserController extends HttpServlet {
     }
 
     private String logout(HttpServletRequest request,
-            HttpServletResponse response) {
+                                HttpServletResponse response) {
         
         HttpSession session = request.getSession(false);
         session.removeAttribute("user");
@@ -134,10 +147,10 @@ public class UserController extends HttpServlet {
     }
 
     private String removeAccount(HttpServletRequest request,
-            HttpServletResponse response) {
+                                HttpServletResponse response) {
         String email = request.getParameter("userEmail");
         
-        if (!UserDao.removeUser(email)) {
+        if (!UserDAO.removeUser(email)) {
             String message = "something wrong";
             request.setAttribute("message", message);
         } else {
@@ -146,5 +159,114 @@ public class UserController extends HttpServlet {
         }
         
         return "/checkLogin.jsp";
+    }
+
+    private String showProfile(HttpServletRequest request,
+                                HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        String url;
+        if (user == null) {
+            String message = "To edit profile your must login fist";
+            request.setAttribute("message", message);
+            url = "/login.jsp";
+        } else {
+            url = "/userpage/editProfile.jsp";
+        }
+        return url;
+    }
+
+    private String editProfile(HttpServletRequest request,
+                                HttpServletResponse response) {
+        
+        String message;
+        
+        String fullName = request.getParameter("fullname");
+//        String email = request.getParameter("email");
+        String userName = request.getParameter("username");
+        String phoneNumber = request.getParameter("phonenumber");
+        
+        HttpSession session = request.getSession();
+        User oldUser = (User) session.getAttribute("user");
+        
+        if (UserDAO.userNameExist(userName) 
+            && !userName.equals(oldUser.getUserName())) {
+            message= "The user name all ready exit";
+            request.setAttribute("message", message);
+            return  "/userpage/editProfile.jsp";
+        }
+                
+        User user = new User();
+        user.setEmail(oldUser.getEmail());
+        user.setFullName(fullName);
+        user.setUserName(userName);
+        user.setPoneNumber(phoneNumber);
+        
+        if (!UserDAO.updateInfo(user)) {
+            message = "DataBase update false";
+            request.setAttribute("message", message);
+        } else {
+            User newUser =
+                UserDAO.select(oldUser.getEmail(), oldUser.getPassword());
+            session.setAttribute("user", newUser);
+            message = "Update successfull";
+            request.setAttribute("message", message);
+        }
+        return "/checkLogin.jsp";
+    }
+    
+    private String searchTrip(HttpServletRequest request,
+                                HttpServletResponse response) {
+        
+        String search = request.getParameter("searchKey");
+        
+        String url;
+        
+        if(search == null || search.equals("")) {
+            url = "/search.jsp";
+        } else {
+            TripList tripList = TripDAO.select(search);
+            if (tripList.isEmpty()) {
+                String message = "There are not exit these trips";
+                request.setAttribute("message", message);
+                url = "/search.jsp";
+            } else {
+                String message = "Search success";
+                request.setAttribute("message", message);
+                request.getSession().setAttribute("tripList", tripList);
+                url = "/search.jsp";
+            }
+        }
+        return url;
+    }
+
+    private String sendFeedback(HttpServletRequest request,
+                                HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        String url;
+        String message;
+        
+        if (user == null) {
+            message = "To write feedback please login first";
+            url = "/login.jsp";
+        } else {
+            Feedback feedback = new Feedback();
+            feedback.setComment(request.getParameter("comment"));
+            feedback.setSubject(request.getParameter("subject"));
+            feedback.setUser(user);
+            
+            if (FeedbackDAO.insert(feedback) == 0) {
+                message = "Data faid insert feedback!";
+                url = "/userpage/feedback.jsp";
+            } else {
+                message = "Thank for your contribute";
+                url = "/userpage/feedback.jsp";
+            }
+        }
+        request.setAttribute("message", message);
+        
+        return url;
     }
 }
