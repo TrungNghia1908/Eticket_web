@@ -1,0 +1,50 @@
+.header {
+    background-color: #0A0A05;
+}
+
+.logoName {
+    font-family: SVN-Monday;
+    font-size: 48px;
+    color: #E28F2E;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.footer {
+    background-color: #E28F2E;
+    padding: 0px 300px;
+}
+
+.Register {
+    background-color: #E28F2E;
+    font-family: iCiel Effra;
+    color: #0A0A05;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.button {
+    background-color: #0A0A05;
+}
+
+.footer1 {
+    margin-top: 30px;
+}
+
+.followus1 h1 {
+    font-family: SVN-Monday;
+    color: white;
+}
+
+.followus1 p {
+    font-family: iCiel Effraf;
+    color: white;
+}
+
+.followus2 h2 {
+    font-family:BreeSerif ;
+    color: white;
+    text-align: center;
+}
