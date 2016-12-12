@@ -1,7 +1,10 @@
 package bean;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
     
+    private int userId;
     private String fullName;
     private String email;
     private String userName;
@@ -9,6 +12,14 @@ public class User {
     private String phoneNumber;
     
     public User() {}
+    
+    public int getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(int id) {
+        this.userId = id;
+    }
     
     public String getUserName() {
         return userName;

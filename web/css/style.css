@@ -1,0 +1,309 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 19, 2016, 5:34:37 PM
+    Author     : admin
+*/
+
+@font-face
+{
+    font-family: SVN;
+    src: url(../font/SVN-Monday.otf);
+}
+
+@font-face
+{
+    font-family: iCielEffra;
+    src: url(../font/iCielEffra-Regular.otf);
+}
+
+@font-face
+{
+    font-family: BreeSerif;
+    src: url(../font/BreeSerif.otf);
+}
+
+html
+{
+    position: relative;
+    min-height: 100%;
+}
+
+body
+{
+    background-color: #f6f9f4;
+    margin-bottom: 170px;
+}
+
+/*  logo, search and login */
+.top
+{
+    background-color: #0a0a05;
+    
+}
+
+.logo:hover
+{
+    color: #e4902e;
+    text-decoration: none;
+}
+
+.logo
+{
+    margin-left: 50px;
+    color: #e4902e;
+    font: 55px SVN;
+    text-decoration: none;
+}
+
+.login
+{
+    float: right;
+    margin-right: 50px;
+    font:400 26px iCielEffra;
+    color: #f6f9f4;
+}
+
+.srch
+{
+    height: 40px;
+    width: 250px;
+    padding: 8px;
+    margin: 10px;
+    margin-top: 45px;
+    border-radius: 7px;
+    border: solid 1px;
+    font:400 25px BreeSerif;
+}
+
+.ic1p
+{
+    margin:-7px -50px; /* nam trong */
+}
+
+.ic1
+{
+    height: 30px;
+    width: 30px;
+}
+
+/*  nav */
+
+.navbar-custom
+{
+    background-color: #f6f9f4;
+    border-radius: 0;
+    border-top: solid 3px #e4902e;
+}
+
+.nav a
+{
+    font: 400 24px iCielEffra;
+    color: #e4902e;
+}
+
+/* for footer */
+.wrap
+{
+    clear:both;
+    height: 100%;
+    margin-bottom: 170px;
+}
+
+/* footer */
+
+.footer
+{
+    background-color:#e4902e;
+    padding: 0px 50px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 170px;
+}
+
+.followus1
+{
+    margin-top:0px;
+    margin-bottom: 10px;
+    font: 25px SVN;
+    color: #f6f9f4;
+}
+
+.followus1 p
+{
+    font: 400 20px iCielEffra;
+    color: #f6f9f4;
+}
+
+.followus2
+{ 
+    text-align: center;
+    font-family: Bree Serif;
+    color: white;
+    margin-top: 20px;
+}
+
+/* Button */
+.button
+{
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -moz-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    -webkit-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    -ms-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: transparent;
+    border-radius: 4px;
+    border: 0;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    color: #f6f9f4;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 300;
+    height: 2em;
+    line-height: 2em;
+    padding: 0 1em;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    margin:0px;
+}
+
+.scpecial
+{
+    background-color: #e4902e;
+    box-shadow: none;
+    color: #f6f9f4;
+}
+
+.sub
+{
+    background-color: #e4902e;
+    box-shadow: none;
+    font: 400 20px iCielEffra;
+    margin: 15px 0px;
+    margin-right: 20px;
+}
+
+.sub2
+{
+    background-color: #272833;
+    box-shadow: none;
+    font: 400 20px iCielEffra;
+    margin: 15px 0px;
+}
+
+.sub:hover, .sub2:hover
+{
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px #e4902e;
+    color: #e4902e;
+}
+
+.button:hover, .button:active {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px #e4902e;
+    color: #e4902e;
+}
+
+.link
+{
+    font: 400 24px iCielEffra;
+    color: #e4902e;
+    border: none;
+    background-color: transparent;
+    padding: 11px;
+    text-align: center;
+}
+
+/* a */
+nav a, nav .link {
+        -moz-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        -webkit-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        -ms-transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+nav a:hover,nav a:active, nav a:visited, nav .link:hover {
+    background-color: transparent;
+    color: #e4902e;
+    border-bottom: solid 3px;
+}
+
+section h1
+{
+    font: 400 50px BreeSerif;
+    color: #e4902e;
+}
+
+section hr
+{
+    color: #272833;
+    width: 100px;
+    border: 1.75px solid;
+}
+
+/* input */
+.input{
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -moz-transition: border-color 0.2s ease-in-out;
+    -webkit-transition: border-color 0.2s ease-in-out;
+    -ms-transition: border-color 0.2s ease-in-out;
+    transition: border-color 0.2s ease-in-out;
+    background: transparent;
+    border-radius: 4px;
+    border: solid 1px rgba(28, 29, 38, 0.67);
+    color: inherit;
+    display: block;
+    outline: 0;
+    padding: 5px 5px;
+    margin: 5px 5px;
+    text-decoration: none;
+    width: 100%;
+}
+
+.input:invalid,.inputt:invalid {
+    box-shadow: none;
+}
+
+.input:focus, .inputt:invalid {
+    border-color: #e4902e;
+}
+
+
+/*text*/
+.texts
+{
+    font: 400 23px BreeSerif;
+    color: #272833;
+}
+
+/* table */
+.tabl
+{
+    border-collapse: collapse;
+    width: 50%;
+    margin-bottom: 40px;
+}
+
+.tabl th, .tabl td
+{
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.tabl th
+{
+    color: #f6f9f4;
+    background-color: #272833;
+}

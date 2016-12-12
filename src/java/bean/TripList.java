@@ -1,12 +1,13 @@
 package bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author A Di Đà Phật
  */
-public class TripList {
+public class TripList implements Serializable {
     
     private List<Trip> trips;
     
@@ -14,7 +15,7 @@ public class TripList {
         trips = new ArrayList<>();
     }
     
-    public void setTrip (List<Trip> trips) {
+    public void setTrips (List<Trip> trips) {
         this.trips = trips;
     }
     
