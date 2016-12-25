@@ -1,5 +1,6 @@
 package util;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -30,13 +31,13 @@ public class PasswordUtil {
     
     public static String getSalt() {
         Random r = new SecureRandom();
-        byte[] saltBytes = new byte[4];
-        r.nextBytes(saltBytes);
-        return Base64.getMimeEncoder().encodeToString(saltBytes);
+        String value = new BigInteger(130, r).toString(32);
+        return value;
     }
     
     public static String hashAndSaltPassword(String password, String salt)
             throws NoSuchAlgorithmException {
+        
         return hashPassword(password + salt);
     }
     
@@ -63,12 +64,13 @@ public class PasswordUtil {
     */    
     public static void main(String[] args) {
         try {
-            System.out.println("Hash for 'sesame':\n"
-                    + hashPassword("sesame"));
+//            System.out.println("Hash for 'sesame':\n"
+//                    + hashPassword("an321"));
+            String salt = getSalt();
             System.out.println("Random salt:\n"
-                    + getSalt());
+                    + salt);
             System.out.println("Salted hash for 'sesame':\n"
-                    + hashAndSaltPassword("sesame", getSalt()));            
+                    + hashAndSaltPassword("123", salt));            
         } catch (NoSuchAlgorithmException ex) {
             System.out.println(ex);
         }

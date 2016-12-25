@@ -5,12 +5,13 @@ import java.io.Serializable;
 public class User implements Serializable{
     
     private int userId;
+    private String valid;
     private String fullName;
     private String email;
     private String userName;
     private String password;
-    private String hashPass;
-    private String staltPass;
+    private String saltPass;
+    private String hashSaltPass;
     private int phoneNumber;
     
     public User() {}
@@ -21,6 +22,14 @@ public class User implements Serializable{
     
     public void setUserId(int id) {
         this.userId = id;
+    }
+    
+    public String getVail() {
+        return this.valid;
+    }
+    
+    public void setVail(String valid) {
+        this.valid = valid;
     }
     
     public String getUserName() {
@@ -47,14 +56,6 @@ public class User implements Serializable{
         this.fullName = fullName;
     }
     
-    public int getPhoneNumber() {
-        return this.phoneNumber;
-    }
-    
-    public void setPoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    
     public String getPassword() {
         return this.password;
     }
@@ -63,19 +64,27 @@ public class User implements Serializable{
         this.password = password;
     }
     
-    public String getHashPass() {
-        return this.hashPass;
+    public String getSaltPass () {
+        return this.saltPass;
     }
     
-    public void setHashPass(String hashPass) {
-        this.hashPass = hashPass;
+    public void setSaltPass (String saltPass) {
+        this.saltPass = saltPass;
     }
     
-    public String getStaltPass() {
-        return this.staltPass;
+    public String getHashSaltPass() {
+        return this.hashSaltPass;
     }
     
-    public void setStaltPass(String hashPass) {
-        this.hashPass = hashPass;
+    public void setHashSaltPass(String hashPass) {
+        this.hashSaltPass = hashPass;
+    }
+    
+    public int getPhoneNumber() {
+        return this.phoneNumber;
+    }
+    
+    public void setPoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

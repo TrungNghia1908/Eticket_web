@@ -77,7 +77,7 @@ public class FeedbackDAO {
                  * and store that result in new User object.
                  * 2. Set that new user object in the feedback object.
                  */ 
-                User u = UserDao.select(rs.getInt("Cus_id"));
+                User u = UserDAO.select(rs.getInt("Cus_id"));
                 f.setUser(u);
                 
                 // add the feedback to the feedback list.
