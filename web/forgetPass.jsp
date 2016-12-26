@@ -10,6 +10,7 @@
             <input type="text" name="email" class="input" style="width: 50%">
             <input type="submit" value="submit" class="button sub">
         </form>
+            ${message}
     </center>
 </section>
 <jsp:include page="/includes/footer.jsp" /> 

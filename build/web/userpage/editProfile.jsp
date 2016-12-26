@@ -33,12 +33,12 @@
             
             <tr>
             <td align="right" class="texts">Password old</td>
-            <td><input type="text" name="oldpass" class="input"/></td>
+            <td><input type="password" name="oldpass" class="input"/></td>
             </tr>
             
             <tr>
             <td align="right" class="texts">Password new</td>
-            <td><input type="text" name="passnew" class="input"/></td>
+            <td><input type="password" name="passnew" class="input"/></td>
             </tr>
         
         </table>

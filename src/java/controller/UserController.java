@@ -33,7 +33,7 @@ public class UserController extends HttpServlet {
         String action = request.getParameter("action");
 
         if (requestURI.endsWith("/confirmAccount")) {
-            url = confirmAccount(request, response);
+            url = confirmAccount(request, response);  // check the confirm email
         } else if (requestURI.endsWith("/forgetPass")) {
             url = forgetPass(request, response);
         } else if (action == null) {
@@ -51,11 +51,11 @@ public class UserController extends HttpServlet {
                 }
             }
         }
-
+        // DeteCookies in future
         getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
-        // DeteCookies in future
+        
     }
 
     @Override

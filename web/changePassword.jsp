@@ -5,10 +5,20 @@
 
 <section>
     <center class="wrap texts">
+        <h1>Change Password</h1>
+        <hr>
         <form action="<c:url value="/user/changePass"/>" method="post">
-            New Password: <input type="password" name="newPass" required="">
-            Confirm Password: <input type="password" name="conPass" required="">
-            <input type="submit" value="submit" class="button sub">
+            <table>
+                <tr>
+                    <td align="right" >New Password</td>
+                    <td><input type="password" name="newPass" required="" class="input"></td>
+                </tr>
+                <tr>
+                    <td align="right" >Confirm Password</td>
+                    <td><input type="password" name="conPass" required="" class="input"></td>
+                </tr>
+            </table>
+            <input type="submit" value="submit" class="button sub"><br>
             <p>${message}</p>
         </form>
     </center>

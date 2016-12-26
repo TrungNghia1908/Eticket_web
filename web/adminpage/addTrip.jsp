@@ -10,18 +10,18 @@
             <table>
                 <tr>
                     <td align="right" class="texts">Arrival</td>
-                    <td><input type="text" name="arrival" value="${trip.arrival}" class="input" required=""/></td>
+                    <td><input type="text" name="arrival" class="input" required=""/></td>
                 </tr>
 
                 <tr>
                     <td align="right" class="texts">Destination</td>
-                    <td><input type="text" name="destination" value="${trip.destination}" class="input" required=""/></td>
+                    <td><input type="text" name="destination" class="input" required=""/></td>
                     <!--<td><a href="addTrip.jsp?check=1">Add new destination</a></td>-->
                 </tr>
 
                 <tr>
                     <td align="right" class="texts">Price</td>
-                    <td><input type="text" name="price" value="${trip.price}" class="input" required=""/></td>
+                    <td><input type="text" name="price" class="input" required=""/></td>
                 </tr>
 
             </table>

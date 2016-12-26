@@ -87,7 +87,7 @@ public class EmailSendingController extends HttpServlet {
                     + "Run Time:  " + ticket.getTimeAvailable()+ ",\n\n"
                     + "Drivet Name " + b.getDriverName()+ ",\n\n"
                     + "Your seat No " + Arrays.toString(seatNo)+ ",\n\n"
-                    + "Your seat No " + "http://localhost:8080/Eticket_Project/user/profile"+ ",\n\n"
+                    + "Your seat No " + "http://localhost:8084/Eticket_Project/user/profile"+ ",\n\n"
                     + "Have a great day and thanks again!\n\n"
                     + "Nguyen Trung Nghia\n"
                     + "A Di Da Phat";
@@ -128,7 +128,7 @@ public class EmailSendingController extends HttpServlet {
                     + "Your Full Name:  " + u.getFullName() + ",\n\n"
                     + "Email:  " + u.getEmail()+ ",\n\n"
                     + "Phone Number " + u.getPhoneNumber()+ ",\n\n"
-                    + "http://localhost:8080/Eticket_Project/user/confirmAccount?idConfirm="+u.getHashSaltPass()+"\n\n"
+                    + "http://localhost:8084/Eticket_Project/user/confirmAccount?idConfirm="+u.getHashSaltPass()+"\n\n"
                     + "Have a great day and thanks again!\n\n"
                     + "Nguyen Trung Nghia\n"
                     + "A Di Da Phat";
@@ -155,16 +155,22 @@ public class EmailSendingController extends HttpServlet {
     
     private String forgetPassMail(HttpServletRequest request,
                                 HttpServletResponse response) {
+        String url;
+        String message;
         String email = request.getParameter("email");
         User u = UserDAO.select(email);
-        
-        String to = u.getEmail();
+        if (u == null) {
+            message = "Invalid Email";
+            request.setAttribute("message", message);
+            url = "/user/forgetpass";
+        } else {
+            String to = u.getEmail();
             String from = "meoconthichhoc@gmail.com";
             String subject = "chuyenxedem";
             String body = "Dear " + u.getFullName() + ",\n\n"
                     + "To change password forward this link \n"
                     + "\n=====================================\n"
-                    + "http://localhost:8080/Eticket_Project/user/forgetPass?email=" + u.getEmail()+ "&passId="+u.getHashSaltPass()+ "\n\n"
+                    + "http://localhost:8084/Eticket_Project/user/forgetPass?email=" + u.getEmail()+ "&passId="+u.getHashSaltPass()+ "\n\n"
                     + "Have a great day and thanks again!\n\n"
                     + "Nguyen Trung Nghia\n"
                     + "A Di Da Phat";
@@ -182,10 +188,12 @@ public class EmailSendingController extends HttpServlet {
                         + "\n"
                         + body + "\n\n");
             }
-        String resultMessage = "Please check your email to change password";
+        message = "Please check your email to change password";
         request.getSession().setAttribute("user", u);
-        request.setAttribute("message", resultMessage);    
+        url = "/changePasswordComfirm.jsp";
+        }
         
-        return "/changePasswordComfirm.jsp";
+        request.setAttribute("message", message);    
+        return url;
     }
 }
