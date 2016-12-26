@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/src/java/DAO/TripDAO.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/src/java/DAO/BusDAO.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/test/DAOTest/UserDAO.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/src/java/DAO/UserDAO.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/src/java/DAO/TicketDAO.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/src/java/controller/EmailSendingController.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/src/java/DAO/ReportDAO.java</file>
+            <file>file:/C:/Users/Administrator/Downloads/Eticket_Projectdemo/Eticket_Project/src/java/controller/UserController.java</file>
+        </group>
     </open-files>
 </project-private>
